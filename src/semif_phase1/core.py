@@ -79,8 +79,7 @@ def load_causal_model(source: str, revision: str):
         raise ValueError("Remote models require a pinned 40-character commit revision")
     if local and not revision:
         raise ValueError("Local models require an explicit manifest/revision string")
-    if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-        raise ValueError("Expose exactly one CUDA GPU, for example with CUDA_VISIBLE_DEVICES")
+    use_cuda = torch.cuda.is_available() and torch.cuda.device_count() == 1
     common = {"revision": None if local else revision, "local_files_only": local, "trust_remote_code": False}
     config = transformers.AutoConfig.from_pretrained(source, **common)
     tokenizer = transformers.AutoTokenizer.from_pretrained(source, **common)
@@ -94,7 +93,7 @@ def load_causal_model(source: str, revision: str):
         source,
         config=config,
         dtype=torch.bfloat16,
-        device_map={"": "cuda:0"},
+        device_map={"": "cuda:0"} if use_cuda else {"": "cpu"},
         low_cpu_mem_usage=True,
         output_loading_info=True,
         **common,
