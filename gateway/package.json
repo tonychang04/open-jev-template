@@ -1,0 +1,13 @@
+{
+  "name": "open-jev-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One /api/decide for Jev (bring-your-own gateway key) and self-hosted open-jev backends.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "ai": "^7.0.107",
+    "express": "^4.21.2"
+  }
+}
